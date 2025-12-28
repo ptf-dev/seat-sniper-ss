@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 let browser = null;
 let page = null;
@@ -29,7 +30,7 @@ async function start(conf, onLog, onStatus) {
     // Send Start Notification
     try {
         await sendEmail(config.email, config.password, {
-            subject: '🚀 Ticket Sniper Started',
+            subject: '🚀 Seat Sniper Started',
             text: `Bot started monitoring ${config.url}`,
             html: `
                 <div style="font-family: sans-serif; padding: 20px; background: #eff6ff; border-radius: 10px;">
@@ -195,7 +196,7 @@ async function stop(onStatus, onLog) {
     if (config && config.email) {
         try {
             await sendEmail(config.email, config.password, {
-                subject: '🛑 Ticket Sniper Stopped',
+                subject: '🛑 Seat Sniper Stopped',
                 text: `Bot stopped. Ran for ${durationMins} mins. Checks: ${stats.checks}`,
                 html: `
                     <div style="font-family: sans-serif; padding: 20px; background: #fff1f2; border-radius: 10px;">
@@ -221,21 +222,19 @@ async function stop(onStatus, onLog) {
 }
 
 async function sendEmail(targetEmail, _unusedPass, content) {
-    // Using fixed SMTP credentials for support@xpips.com (Zoho)
-
     const transporter = nodemailer.createTransport({
-        host: 'smtp.zoho.eu',
-        port: 465,
+        host: process.env.SMTP_HOST || 'smtp.zoho.eu',
+        port: process.env.SMTP_PORT || 465,
         secure: true,
         auth: {
-            user: 'support@xpips.com',
-            pass: '8JxcPHL2BULe'
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS
         }
     });
 
     const mailOptions = {
-        from: `"Prop Firms Tech" <support@xpips.com>`,
-        to: targetEmail, // Send to the email specified in the UI
+        from: `"Prop Firms Tech" <${process.env.SMTP_USER}>`,
+        to: targetEmail,
         subject: content.subject,
         text: content.text,
         html: content.html

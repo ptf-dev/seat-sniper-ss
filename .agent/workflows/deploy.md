@@ -29,7 +29,11 @@ git commit -m "Initial commit"
 ### 3. Configure the Application
 1. Coolify should automatically detect the `Dockerfile`.
 2. In the **Ports** settings, ensure it's set to `3000:3000`.
-3. If your bot requires environment variables (like email credentials), add them in the **Environment Variables** tab.
+3. Go to the **Environment Variables** tab and add the following:
+   - `SMTP_USER`: `support@xpips.com`
+   - `SMTP_PASS`: Your SMTP password
+   - `SMTP_HOST`: `smtp.zoho.eu`
+   - `SMTP_PORT`: `465`
 4. Click **Deploy**.
 
 ### 4. Verify Deployment
