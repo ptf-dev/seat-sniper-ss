@@ -14,7 +14,11 @@ let stats = { // Added stats object
 };
 
 async function start(conf, onLog, onStatus) {
-    if (isRunning) return;
+    if (isRunning) {
+        onStatus('running');
+        onLog({ message: 'Bot is already running. Reconnecting...', type: 'info' });
+        return;
+    }
     isRunning = true;
     config = conf;
     // Reset stats
@@ -26,9 +30,11 @@ async function start(conf, onLog, onStatus) {
     };
 
     onStatus('running');
+    onLog({ message: 'Bot session initiated...', type: 'info' });
 
     // Send Start Notification
     try {
+        onLog({ message: 'Sending start notification email...', type: 'info' });
         await sendEmail(config.email, config.password, {
             subject: '🚀 Seat Sniper Started',
             text: `Bot started monitoring ${config.url}`,
@@ -50,7 +56,8 @@ async function start(conf, onLog, onStatus) {
     try {
         onLog({ message: 'Launching browser...', type: 'info' });
         browser = await puppeteer.launch({
-            headless: 'new', // Use new headless mode
+            headless: true,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-features=site-per-process']
         });
 
@@ -243,4 +250,12 @@ async function sendEmail(targetEmail, _unusedPass, content) {
     return transporter.sendMail(mailOptions);
 }
 
-module.exports = { start, stop };
+function getStatus() {
+    return isRunning ? 'running' : 'idle';
+}
+
+function getStats() {
+    return stats;
+}
+
+module.exports = { start, stop, getStatus, getStats };

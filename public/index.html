@@ -316,6 +316,8 @@
             <div class="status-badge">
                 <div id="statusDot" class="status-dot"></div>
                 <span id="statusText">Idle</span>
+                <span id="socketStatus"
+                    style="margin-left: 10px; font-size: 0.7rem; opacity: 0.5;">(Connecting...)</span>
             </div>
         </header>
 
@@ -369,8 +371,18 @@
         const statusText = document.getElementById('statusText');
         const startBtn = document.getElementById('startBtn');
         const stopBtn = document.getElementById('stopBtn');
-
+        const socketStatus = document.getElementById('socketStatus');
         const historyList = document.getElementById('historyList');
+
+        socket.on('connect', () => {
+            socketStatus.textContent = '(Connected)';
+            socketStatus.style.color = 'var(--accent)';
+        });
+
+        socket.on('disconnect', () => {
+            socketStatus.textContent = '(Disconnected)';
+            socketStatus.style.color = 'var(--danger)';
+        });
 
         socket.on('log', (data) => {
             // Add to logs console

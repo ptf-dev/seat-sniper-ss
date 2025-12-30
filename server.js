@@ -16,6 +16,9 @@ app.use(express.json());
 io.on('connection', (socket) => {
     console.log('Client connected');
 
+    // Send current status on connection
+    socket.emit('status', bot.getStatus());
+
     socket.on('start', (config) => {
         console.log('Starting bot with config:', config);
         bot.start(
