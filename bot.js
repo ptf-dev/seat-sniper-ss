@@ -178,8 +178,8 @@ async function monitorLoop(onLog) {
 
         if (!isRunning) break;
 
-        const delay = Math.floor(Math.random() * 30000) + 30000;
-        onLog({ message: `Waiting ${Math.round(delay / 1000)}s...`, type: 'info' });
+        const delay = (60 * 60 * 1000) + Math.floor(Math.random() * 60000); // 1 hour + 0-60s random jitter
+        onLog({ message: `Waiting ${Math.round(delay / 60000)} minutes until next check...`, type: 'info' });
         await new Promise(resolve => setTimeout(resolve, delay));
     }
 }
