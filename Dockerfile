@@ -9,8 +9,6 @@ RUN apt-get update && apt-get install -y \
     libharfbuzz-dev \
     ca-certificates \
     fonts-freefont-ttf \
-    nodejs \
-    npm \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 

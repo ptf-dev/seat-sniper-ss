@@ -58,7 +58,7 @@ async function start(conf, onLog, onStatus) {
         browser = await puppeteer.launch({
             headless: true,
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-features=site-per-process']
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-features=site-per-process', '--disable-dev-shm-usage']
         });
 
         page = await browser.newPage();
